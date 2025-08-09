@@ -1,0 +1,62 @@
+{
+  "stock_code": "002747",
+  "analysis_time": 6822.01916384697,
+  "total_tool_calls": 0,
+  "total_llm_calls": 24,
+  "sentiment": "Step 1: Error: ⚠️ Tool 'web_search' encountered a problem: RetryError[<Future at 0x1252f3050 state=finished raised DuckDuckGoSearchException>]\nStep 2: Error: ⚠️ Tool 'web_search' encountered a problem: RetryError[<Future at 0x124924050 state=finished raised DuckDuckGoSearchException>]\nStep 3: Error: ⚠️ Tool 'web_search' encountered a problem: RetryError[<Future at 0x12495a7b0 state=finished raised DuckDuckGoSearchException>]\nTerminated: Reached max steps (3)",
+  "risk": "Step 1: Observed output of cmd `risk_control_tool` executed:\n{'legal': [], 'financial_meta': {}}\nStep 2: Observed output of cmd `terminate` executed:\nThe interaction has been completed with status: 数据缺失，无法获取财务或法务数据",
+  "hot_money": "Error: RetryError[<Future at 0x1249ae3c0 state=finished raised APIConnectionError>]",
+  "technical": "Error: RetryError[<Future at 0x1249ba780 state=finished raised APIConnectionError>]",
+  "chip_analysis": "Error: RetryError[<Future at 0x124955a60 state=finished raised APIConnectionError>]",
+  "big_deal": "Error: RetryError[<Future at 0x1249c4560 state=finished raised APIConnectionError>]",
+  "expert_consensus": "0.0% 看涨",
+  "battle_result": {
+    "battle_history": [],
+    "debate_history": [],
+    "debate_rounds": 2,
+    "agent_order": [
+      "sentiment_agent",
+      "risk_control_agent",
+      "hot_money_agent",
+      "technical_analysis_agent",
+      "chip_analysis_agent",
+      "big_deal_analysis_agent"
+    ],
+    "vote_results": {
+      "bullish": 0,
+      "bearish": 6
+    },
+    "vote_count": {
+      "bullish": 0,
+      "bearish": 6
+    },
+    "final_decision": "bearish",
+    "round_votes": {
+      "2": {
+        "sentiment_agent": "bearish",
+        "risk_control_agent": "bearish",
+        "hot_money_agent": "bearish",
+        "technical_analysis_agent": "bearish",
+        "chip_analysis_agent": "bearish",
+        "big_deal_analysis_agent": "bearish"
+      }
+    },
+    "final_votes": {
+      "sentiment_agent": "bearish",
+      "risk_control_agent": "bearish",
+      "hot_money_agent": "bearish",
+      "technical_analysis_agent": "bearish",
+      "chip_analysis_agent": "bearish",
+      "big_deal_analysis_agent": "bearish"
+    },
+    "battle_highlights": [],
+    "total_tool_calls": 0,
+    "total_llm_calls": 24,
+    "voting_summary": {
+      "total_experts": 6,
+      "voted_experts": 6,
+      "terminated_experts": 0,
+      "rounds_with_votes": 1
+    }
+  }
+}

@@ -1,0 +1,100 @@
+
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>JSON Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            ul { list-style-type: none; }
+            li { margin: 4px 0; }
+            b { color: #1a237e; }
+        </style>
+    </head>
+    <body>
+        <h2>JSON 分析报告可视化</h2>
+        <ul>
+  <li><b>stock_code:</b> 002747</li>
+  <li><b>analysis_time:</b> 6822.01916384697</li>
+  <li><b>total_tool_calls:</b> 0</li>
+  <li><b>total_llm_calls:</b> 24</li>
+  <li><b>sentiment:</b> Step 1: Error: ⚠️ Tool 'web_search' encountered a problem: RetryError[<Future at 0x1252f3050 state=finished raised DuckDuckGoSearchException>]
+Step 2: Error: ⚠️ Tool 'web_search' encountered a problem: RetryError[<Future at 0x124924050 state=finished raised DuckDuckGoSearchException>]
+Step 3: Error: ⚠️ Tool 'web_search' encountered a problem: RetryError[<Future at 0x12495a7b0 state=finished raised DuckDuckGoSearchException>]
+Terminated: Reached max steps (3)</li>
+  <li><b>risk:</b> Step 1: Observed output of cmd `risk_control_tool` executed:
+{'legal': [], 'financial_meta': {}}
+Step 2: Observed output of cmd `terminate` executed:
+The interaction has been completed with status: 数据缺失，无法获取财务或法务数据</li>
+  <li><b>hot_money:</b> Error: RetryError[<Future at 0x1249ae3c0 state=finished raised APIConnectionError>]</li>
+  <li><b>technical:</b> Error: RetryError[<Future at 0x1249ba780 state=finished raised APIConnectionError>]</li>
+  <li><b>chip_analysis:</b> Error: RetryError[<Future at 0x124955a60 state=finished raised APIConnectionError>]</li>
+  <li><b>big_deal:</b> Error: RetryError[<Future at 0x1249c4560 state=finished raised APIConnectionError>]</li>
+  <li><b>expert_consensus:</b> 0.0% 看涨</li>
+  <li><b>battle_result:</b>     <ul>
+      <li><b>battle_history:</b>         <ul>
+        </ul>
+</li>
+      <li><b>debate_history:</b>         <ul>
+        </ul>
+</li>
+      <li><b>debate_rounds:</b> 2</li>
+      <li><b>agent_order:</b>         <ul>
+          <li>sentiment_agent</li>
+          <li>risk_control_agent</li>
+          <li>hot_money_agent</li>
+          <li>technical_analysis_agent</li>
+          <li>chip_analysis_agent</li>
+          <li>big_deal_analysis_agent</li>
+        </ul>
+</li>
+      <li><b>vote_results:</b>         <ul>
+          <li><b>bullish:</b> 0</li>
+          <li><b>bearish:</b> 6</li>
+        </ul>
+</li>
+      <li><b>vote_count:</b>         <ul>
+          <li><b>bullish:</b> 0</li>
+          <li><b>bearish:</b> 6</li>
+        </ul>
+</li>
+      <li><b>final_decision:</b> bearish</li>
+      <li><b>round_votes:</b>         <ul>
+          <li><b>2:</b>             <ul>
+              <li><b>sentiment_agent:</b> bearish</li>
+              <li><b>risk_control_agent:</b> bearish</li>
+              <li><b>hot_money_agent:</b> bearish</li>
+              <li><b>technical_analysis_agent:</b> bearish</li>
+              <li><b>chip_analysis_agent:</b> bearish</li>
+              <li><b>big_deal_analysis_agent:</b> bearish</li>
+            </ul>
+</li>
+        </ul>
+</li>
+      <li><b>final_votes:</b>         <ul>
+          <li><b>sentiment_agent:</b> bearish</li>
+          <li><b>risk_control_agent:</b> bearish</li>
+          <li><b>hot_money_agent:</b> bearish</li>
+          <li><b>technical_analysis_agent:</b> bearish</li>
+          <li><b>chip_analysis_agent:</b> bearish</li>
+          <li><b>big_deal_analysis_agent:</b> bearish</li>
+        </ul>
+</li>
+      <li><b>battle_highlights:</b>         <ul>
+        </ul>
+</li>
+      <li><b>total_tool_calls:</b> 0</li>
+      <li><b>total_llm_calls:</b> 24</li>
+      <li><b>voting_summary:</b>         <ul>
+          <li><b>total_experts:</b> 6</li>
+          <li><b>voted_experts:</b> 6</li>
+          <li><b>terminated_experts:</b> 0</li>
+          <li><b>rounds_with_votes:</b> 1</li>
+        </ul>
+</li>
+    </ul>
+</li>
+</ul>
+
+    </body>
+    </html>
+    

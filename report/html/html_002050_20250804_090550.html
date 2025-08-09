@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinGenius 股票分析报告</title>
+    
+    <!-- Bootstrap 5 & FontAwesome CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* FinGenius 品牌色彩和主题变量 */
+        :root {
+            --fg-primary: #4a6bdf;
+            --fg-primary-dark: #3a5bdf;
+            --fg-success: #28a745;
+            --fg-danger: #dc3545;
+            --fg-light-bg: #f8f9fa;
+            --fg-white: #ffffff;
+            --fg-dark-bg: #1a1d23;
+            --fg-dark-card: #2d3748;
+            --fg-dark-text: #e2e8f0;
+            --fg-border: #dee2e6;
+            --fg-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        /* 深色模式变量覆盖 */
+        [data-theme="dark"] {
+            --bs-body-bg: var(--fg-dark-bg);
+            --bs-body-color: var(--fg-dark-text);
+            --bs-card-bg: var(--fg-dark-card);
+            --bs-border-color: #4a5568;
+        }
+        
+        /* 全局样式 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bs-body-bg, var(--fg-light-bg));
+            transition: all 0.3s ease;
+        }
+        
+        /* 导航栏样式 */
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--fg-primary) !important;
+            font-size: 1.5rem;
+        }
+        
+        .navbar {
+            box-shadow: var(--fg-shadow);
+            background-color: var(--bs-card-bg, var(--fg-white)) !important;
+        }
+        
+        /* 卡片统一样式 */
+        .card {
+            border: none;
+            box-shadow: var(--fg-shadow);
+            border-radius: 0.75rem;
+            background-color: var(--bs-card-bg, var(--fg-white));
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 投票结果可视化 */
+        .vote-progress {
+            height: 1.5rem;
+            background-color: var(--fg-border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .vote-progress-bullish {
+            background: linear-gradient(90deg, var(--fg-success), #34ce57);
+            height: 100%;
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .vote-progress-bearish {
+            background: linear-gradient(90deg, var(--fg-danger), #e55353);
+            height: 100%;
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        
+        /* 时间线样式 */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--fg-primary), var(--fg-primary-dark));
+            transform: translateX(-50%);
+            border-radius: 1.5px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin: 2.5rem 0;
+        }
+        
+        .timeline-item-left .card {
+            margin-right: 50%;
+            margin-left: 0;
+            transform: translateX(-1rem);
+        }
+        
+        .timeline-item-right .card {
+            margin-left: 50%;
+            margin-right: 0;
+            transform: translateX(1rem);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 1.5rem;
+            width: 1rem;
+            height: 1rem;
+            background-color: var(--fg-primary);
+            border: 3px solid var(--bs-body-bg, var(--fg-white));
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        
+        /* 移动端时间线适配 */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 1rem;
+            }
+            
+            .timeline-item::before {
+                left: 1rem;
+            }
+            
+            .timeline-item-left .card,
+            .timeline-item-right .card {
+                margin-left: 3rem;
+                margin-right: 0;
+                transform: none;
+            }
+        }
+        
+        /* 回到顶部按钮 */
+        #backToTop {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: var(--fg-primary);
+            border: none;
+            color: white;
+            display: none;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+        }
+        
+        #backToTop:hover {
+            background-color: var(--fg-primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        #backToTop.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 自定义Badge样式 */
+        .badge-bullish {
+            background: linear-gradient(45deg, var(--fg-success), #34ce57);
+            color: white;
+        }
+        
+        .badge-bearish {
+            background: linear-gradient(45deg, var(--fg-danger), #e55353);
+            color: white;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        /* Accordion自定义样式 */
+        .accordion-button:not(.collapsed) {
+            background-color: var(--fg-primary);
+            color: white;
+        }
+        
+        .accordion-button:focus {
+            box-shadow: 0 0 0 0.25rem rgba(74, 107, 223, 0.25);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- 粘性导航栏 -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>FinGenius
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#overview">
+                            <i class="fas fa-chart-pie me-1"></i>概览
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#analysis">
+                            <i class="fas fa-microscope me-1"></i>分析
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#debate">
+                            <i class="fas fa-comments me-1"></i>对话
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#disclaimer">
+                            <i class="fas fa-info-circle me-1"></i>声明
+                        </a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button id="themeToggle" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+ 
+    <!-- 主内容区域 -->
+    <main class="container py-4">
+        <!-- 概览部分 - 将被动态填充 -->
+        <section id="overview" class="mb-5"></section>
+ 
+        <!-- 分析部分 - 将被动态填充 -->
+        <section id="analysis" class="mb-5"></section>
+ 
+        <!-- 辩论部分 -->
+        <section id="debate" class="mb-5">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">
+                    <i class="fas fa-users me-2 text-primary"></i>专家辩论过程
+                </h2>
+                <p class="text-muted">AI专家实时辩论的完整记录</p>
+            </div>
+            
+            <div class="timeline" id="debateTimeline">
+                <!-- 时间线内容将被JavaScript动态渲染 -->
+            </div>
+        </section>
+    </main>
+    
+    <!-- 免责声明 -->
+    <footer id="disclaimer" class="bg-light py-4 mt-5 border-top">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-robot me-2 text-primary"></i>AI生成报告声明
+                    </h5>
+                    <p class="mb-2">
+                        本报告由FinGenius人工智能系统自动生成，基于公开数据和算法模型进行分析。
+                    </p>
+                    <p class="mb-2 text-warning fw-semibold">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        内容仅供参考，不构成投资建议。投资有风险，决策需谨慎。
+                    </p>
+                    <p class="text-muted small mb-0">
+                        &copy; 2025 FinGenius AI分析系统. 版权所有.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+ 
+    <!-- 回到顶部按钮 -->
+    <button id="backToTop" title="回到顶部">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // 页面数据全局变量
+        let reportData = {
+            stock_code: "002050",
+            timestamp: "20250804_090432",
+            research_results: {
+                sentiment: "Step 1: Observed output of cmd `web_search` executed:\nSearch results for '三花智控 002050 最新消息 财联社':\n\n1. 三（汉语汉字）_百度百科\n   URL: https://baike.baidu.com/item/%E4%B8%89/727133\n   Description: 三（拼音：sān）是汉语一级通用汉字（常用字） [1]。 此字始见于商代甲骨文，由三横组成，每横都是表数符号。 三本义是数目的名称，是二和四之间的整数，又表示序数第三，由此又引申表 …\n\n2. 三的繁体字是什么 - 百度知道\n   URL: https://zhidao.baidu.com/question/485910552.html\n   Description: 2019年9月5日 · “三”与“弋”联合起来表示“（每天）第三次持戈巡逻”。 引申义：三。 说明：在古代建筑工地存在偷盗建筑材料、聚众 酗酒 斗殴等不法行为，因此需要每天进行武装巡逻和纠察 …\n\n3. 三的解释|三的意思|汉典“三”字的基本解释\n   URL: https://www.zdic.net/hans/%E4%B8%89\n   Description: 表示多次或多数：～思而行。 ～缄其口。 详细字义. 三 sān. 〈数〉. (1) (指事。 本义:数目。 二加一的和) (2) 同本义 [three] 三，天地人之道也。 从三数。 ——《说文》 三，数名。 ——《广 …\n\n4. 三的意思,三的解释,三的拼音,三的部首,三的笔顺-汉语国学\n   URL: https://www.hanyuguoxue.com/zidian/zi-19977\n   Description: 〔三〕字拼音是（sān），部首是 一部，总笔画是 3画，是独体字。 〔三〕字是独体字，三叠字 (上下三叠字)，五行属金。 〔三〕字造字法是指事。 本义是数目。 二加一的和。 〔三〕字仓 …\n\n5. 三的意思，三字的意思 - 漢語字典\n   URL: https://www.chinesewords.org/character/%E4%B8%89.html\n   Description: 2021年7月18日 · 指歷中九宮的第三宮,即東方震位 。 指君、父、師 。 如:三尊 (三種最受尊敬的人。 指君、父、師) 卷我屋上三重茅。 ——唐· 杜甫《茅屋為秋風所破歌》 一篇之中三致志焉。 …\n\nMetadata:\n- Total results: 5\n- Language: en\n- Country: us\nStep 2: Observed output of cmd `web_search` executed:\nSearch results for '三花智控 002050 新浪财经 最新资讯':\n\n1. 三（汉语汉字）_百度百科\n   URL: https://baike.baidu.com/item/%E4%B8%89/727133\n   Description: 三（拼音：sān）是汉语一级通用汉字（常用字） [1]。 此字始见于商代甲骨文，由三横组成，每横都是表数符号。 三本义是数目的名称，是二和四之间的整数，又表示序数第三，由此又引申表 …\n\n2. 三的繁体字是什么 - 百度知道\n   URL: https://zhidao.baidu.com/question/485910552.html\n   Description: 2019年9月5日 · “三”与“弋”联合起来表示“（每天）第三次持戈巡逻”。 引申义：三。 说明：在古代建筑工地存在偷盗建筑材料、聚众 酗酒 斗殴等不法行为，因此需要每天进行武装巡逻和纠察 …\n\n3. 三的解释|三的意思|汉典“三”字的基本解释\n   URL: https://www.zdic.net/hans/%E4%B8%89\n   Description: 表多次或多数：～思而行。 ～缄其口。 详细字义. 三 sān. 〈数〉. (1) (指事。 本义:数目。 二加一的和) (2) 同本义 [three] 三，天地人之道也。 从三数。 ——《说文》 三，数名。 ——《广 …\n\n4. 三的意思,三的解释,三的拼音,三的部首,三的笔顺-汉语国学\n   URL: https://www.hanyuguoxue.com/zidian/zi-19977\n   Description: 〔三〕字拼音是（sān），部首是 一部，总笔画是 3画，是独体字。 〔三〕字是独体字，三叠字 (上下三叠字)，五行属金。 〔三〕字造字法是指事。 本义是数目。 二加一的和。 〔三〕字仓 …\n\n5. 三花智控:关于回购公司股份的进展公告\n   URL: https://example.com\n   Description: 证券代码：002050 证券简称：三花智控 公告编号：2025-075\n                    浙江三花智能控制股份有限公司\n\n                    关于回购公司股份的进展公告\n\n  本公司及董事会全体成员保证信息披露

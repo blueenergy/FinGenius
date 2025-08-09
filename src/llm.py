@@ -443,7 +443,10 @@ class LLM:
 
             collected_messages = []
             async for chunk in response:
-                chunk_message = chunk.choices[0].delta.content or ""
+                if chunk.choices and len(chunk.choices) > 0:
+                    chunk_message = chunk.choices[0].delta.content or ""
+                else:
+                    chunk_message = ""
                 collected_messages.append(chunk_message)
                 print(chunk_message, end="", flush=True)
 
@@ -594,11 +597,14 @@ class LLM:
                 self.update_token_count(input_tokens)
                 response = await self.client.chat.completions.create(**params)
 
-                collected_messages = []
-                async for chunk in response:
+            collected_messages = []
+            async for chunk in response:
+                if chunk.choices and len(chunk.choices) > 0:
                     chunk_message = chunk.choices[0].delta.content or ""
-                    collected_messages.append(chunk_message)
-                    print(chunk_message, end="", flush=True)
+                else:
+                    chunk_message = ""
+                collected_messages.append(chunk_message)
+                print(chunk_message, end="", flush=True)
 
                 print()  # Newline after streaming
                 full_response = "".join(collected_messages).strip()

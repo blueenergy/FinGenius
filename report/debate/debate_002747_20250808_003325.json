@@ -1,0 +1,15 @@
+{
+  "stock_code": "002747",
+  "timestamp": "20250808_003255",
+  "debate_rounds": 2,
+  "agent_order": [
+    "sentiment_agent",
+    "risk_control_agent",
+    "hot_money_agent",
+    "technical_analysis_agent",
+    "chip_analysis_agent",
+    "big_deal_analysis_agent"
+  ],
+  "debate_history": [],
+  "battle_highlights": []
+}
